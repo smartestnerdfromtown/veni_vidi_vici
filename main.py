@@ -40,6 +40,13 @@ def evaluate(board: chess.Board):
         return -999 if board.turn else 999
     if board.is_stalemate() or board.is_insufficient_material():
         return 0
+    if board.can_claim_threefold_repetition():
+        return 0
+
+    # Repetition Penalty
+    if len(board.move_stack) >= 4:
+        if board.move_stack[-1] == board.move_stack[-3]:
+            score -= 0.3
 
     score = 0
     for square in chess.SQUARES:
@@ -68,18 +75,19 @@ def evaluate(board: chess.Board):
             elif piece.piece_type == chess.KING:
                 pst = KING_TABLE[index]
 
+            # Mobility Bonus
+            mobility = len(list(board.legal_moves))
+            mobility_bonus = + 0.02 * mobility
 
             if piece.color == chess.WHITE:
-                score += value + pst
+                score += value + pst + mobility_bonus
             else:
-                score -= value + pst
+                score -= value + pst + 0.02 * mobility_bonus
 
     return score
 
 def minimax(depth, alpha, beta, maximizing):
-    print("MINIMAX FUNCTION IS BEING CALLED")
     if depth == 0 or board.is_game_over():
-        print("NOW DEPTH IS 0. CALL EVALUATE")
         return evaluate(board)
 
     if maximizing:
@@ -93,7 +101,6 @@ def minimax(depth, alpha, beta, maximizing):
             alpha = max(alpha, eval)
             if beta <= alpha:
                 break
-
         return max_eval
     else:
         min_eval = 999999
@@ -106,7 +113,6 @@ def minimax(depth, alpha, beta, maximizing):
             beta = min(beta, eval)
             if beta <= alpha:
                 break
-
         return min_eval
 
 def engine_move(depth=3):
