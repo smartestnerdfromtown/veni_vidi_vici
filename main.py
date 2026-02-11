@@ -36,7 +36,7 @@ piece_values = {
 # Simple Engine (1-ply)
 # -------------------------
 def evaluate(board: chess.Board):
-    if board.is_checkmate:
+    if board.is_checkmate():
         return -999 if board.turn else 999
     if board.is_stalemate() or board.is_insufficient_material():
         return 0
@@ -44,9 +44,8 @@ def evaluate(board: chess.Board):
     score = 0
     for square in chess.SQUARES:
         piece = board.piece_at(square)
-        piece_name = piece.piece_type
-        print(piece_name)
         if piece:
+            piece_name = piece.piece_type
             value = piece_values[piece_name]
 
             # Getting Positional Bonus
@@ -227,7 +226,7 @@ while True:
 
     # Engine plays black
     if board.turn == chess.BLACK:
-        move = engine_move(depth=5)
+        move = engine_move(depth=3)
         board.push(move)
 
     for event in pygame.event.get():
