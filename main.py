@@ -5,6 +5,8 @@ import random
 import os
 import pprint
 
+from pst import *
+
 pygame.init()
 
 FONT = pygame.font.SysFont("arial", 18)
@@ -35,21 +37,50 @@ piece_values = {
 # -------------------------
 def evaluate(board: chess.Board):
     if board.is_checkmate:
-        if board.turn:
-            return -999999
-        else:
-            return 999999
-    
-    score = 0
+        return -999 if board.turn else 999
+    if board.is_stalemate() or board.is_insufficient_material():
+        return 0
 
-    for piece_type in piece_values:
-        score += len(board.pieces(piece_type, chess.WHITE)) * piece_values[piece_type]
-        score -= len(board.pieces(piece_type, chess.BLACK)) * piece_values[piece_type]
+    score = 0
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        piece_name = piece.piece_type
+        print(piece_name)
+        if piece:
+            value = piece_values[piece_name]
+
+            # Getting Positional Bonus
+            index = (
+                square if piece.color == chess.WHITE
+                       else 63 - square 
+            )
+
+            pst = 0
+            if piece.piece_type == chess.PAWN:
+                pst = PAWN_TABLE[index]
+            elif piece.piece_type == chess.KNIGHT:
+                pst = KNIGHT_TABLE[index]
+            elif piece.piece_type == chess.BISHOP:
+                pst = BISHOP_TABLE[index]
+            elif piece.piece_type == chess.ROOK:
+                pst = ROOK_TABLE[index]
+            elif piece.piece_type == chess.QUEEN:
+                pst = QUEEN_TABLE[index]
+            elif piece.piece_type == chess.KING:
+                pst = KING_TABLE[index]
+
+
+            if piece.color == chess.WHITE:
+                score += value + pst
+            else:
+                score -= value + pst
 
     return score
 
 def minimax(depth, alpha, beta, maximizing):
+    print("MINIMAX FUNCTION IS BEING CALLED")
     if depth == 0 or board.is_game_over():
+        print("NOW DEPTH IS 0. CALL EVALUATE")
         return evaluate(board)
 
     if maximizing:
@@ -196,7 +227,7 @@ while True:
 
     # Engine plays black
     if board.turn == chess.BLACK:
-        move = engine_move(depth=3)
+        move = engine_move(depth=5)
         board.push(move)
 
     for event in pygame.event.get():
