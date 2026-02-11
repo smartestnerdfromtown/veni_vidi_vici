@@ -7,6 +7,7 @@ import pprint
 
 pygame.init()
 
+FONT = pygame.font.SysFont("arial", 18)
 SIZE = 640
 SQ = SIZE // 8
 screen = pygame.display.set_mode((SIZE, SIZE))
@@ -72,6 +73,8 @@ def engine_move():
     best_score = -9999 if board.turn == chess.WHITE else 9999
 
     for move in board.legal_moves:
+        print(list(board.legal_moves))
+        random_move = random.choice(list(board.legal_moves))
         board.push(move)
         score = evaluate(board)
         board.pop()
@@ -85,12 +88,26 @@ def engine_move():
                 best_score = score
                 best_move = move
 
-    return best_move if best_move else random.choice(list(board.legal_moves))
+    print(best_move)
+    return best_move if best_move else random_move
 
 
 # -------------------------
 # Drawing
 # -------------------------
+def draw_coordinates():
+    files = "abcdefgh"
+    ranks = "12345678"
+
+    for i in range(8):
+        # Letters (bottom)
+        file_text = FONT.render(files[i], True, (0, 0, 0))
+        screen.blit(file_text, (i * SQ + 5, SIZE - 20))
+
+        # Numbers (left side)
+        rank_text = FONT.render(ranks[7 - i], True, (0, 0, 0))
+        screen.blit(rank_text, (5, i * SQ + 5))
+
 def draw():
     for r in range(8):
         for c in range(8):
@@ -117,6 +134,8 @@ def draw():
 
             key = color + name_map[piece_name]
             screen.blit(IMAGES[key], (c*SQ, r*SQ))
+    
+    draw_coordinates()
 
 
 def mouse_to_square(pos):
