@@ -5,7 +5,7 @@ class Engine:
     def __init__(self, depth):
         self.depth = depth
 
-    def engine_move(self, board):
+    def search(self, board):
         best_move = None
         best_value = -9999 if board.turn == chess.WHITE else 9999
 
@@ -13,6 +13,7 @@ class Engine:
             board.push(move)
             value = self.minimax(
                 depth=self.depth-1, 
+                board=board,
                 alpha=-999999, 
                 beta=999999, 
                 maximizing=board.turn == chess.WHITE
@@ -31,7 +32,7 @@ class Engine:
         return best_move    
 
 
-    def minimax(self, board, depth, alpha, beta, maximizing):
+    def minimax(self, depth, board, alpha, beta, maximizing):
         if depth == 0 or board.is_game_over():
             return evaluate(board)
 
@@ -39,7 +40,7 @@ class Engine:
             max_eval = -999999
             for move in board.legal_moves:
                 board.push(move)
-                eval = self.minimax(depth-1, alpha, beta, False)
+                eval = self.minimax(depth-1, board, alpha, beta, False)
                 board.pop()
 
                 max_eval = max(max_eval, eval)
@@ -51,7 +52,7 @@ class Engine:
             min_eval = 999999
             for move in board.legal_moves:
                 board.push(move)
-                eval = self.minimax(depth-1, alpha, beta, True)
+                eval = self.minimax(depth-1, board, alpha, beta, True)
                 board.pop()
 
                 min_eval = min(min_eval, eval)
