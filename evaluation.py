@@ -67,8 +67,10 @@ def evaluate(board: chess.Board):
                     repetition_penaly = -0.3
 
             if piece.color == chess.WHITE:
-                score += value + pst + mobility_bonus + repetition_penaly
+                # score += value + pst + mobility_bonus + repetition_penaly
+                score += value + mobility_bonus + repetition_penaly
             else:
-                score -= value + pst + 0.02 * mobility_bonus + abs(repetition_penaly)
-
+                # score -= value + pst + 0.02 * mobility_bonus + abs(repetition_penaly)
+                score += value + mobility_bonus + repetition_penaly
+                
     return score

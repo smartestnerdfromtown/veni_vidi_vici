@@ -39,12 +39,15 @@ class Engine:
                     best_value = value
                     best_move = move
 
+        print(value)
         return best_move    
 
 
     def minimax(self, depth, board, alpha, beta, maximizing):
         if depth == 0 or board.is_game_over():
-            return evaluate(board) + evaluate_nn(board, model)
+            nn_score = evaluate_nn(board, model)
+            eval_score = evaluate(board)
+            return eval_score + nn_score
 
         if maximizing:
             max_eval = -999999
