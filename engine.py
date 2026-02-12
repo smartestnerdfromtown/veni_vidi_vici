@@ -1,5 +1,15 @@
 import chess
-from evaluation import evaluate
+import torch
+
+from evaluation import evaluate, evaluate_nn
+from neural_network import EvalNet
+
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+model = EvalNet()
+model.load_state_dict(torch.load("chess_eval_model.pt", map_location=DEVICE))
+model.to(DEVICE)
 
 class Engine:
     def __init__(self, depth):
@@ -34,7 +44,7 @@ class Engine:
 
     def minimax(self, depth, board, alpha, beta, maximizing):
         if depth == 0 or board.is_game_over():
-            return evaluate(board)
+            return evaluate(board) + evaluate_nn(board, model)
 
         if maximizing:
             max_eval = -999999

@@ -1,5 +1,9 @@
 import chess
 from pst import *
+from load_positions import *
+import torch
+
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 piece_values = {
     chess.PAWN: 1,
@@ -9,6 +13,12 @@ piece_values = {
     chess.QUEEN: 9,
     chess.KING: 0
 }
+
+def evaluate_nn(board, model):
+    model.eval
+    with torch.no_grad():
+        tensor = board_to_tensor(board).unsqueeze(0).to(DEVICE)
+        return model(tensor).item()
 
 def evaluate(board: chess.Board):
     score = 0
