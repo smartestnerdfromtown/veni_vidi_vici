@@ -45,8 +45,8 @@ class Engine:
 
     def minimax(self, depth, board, alpha, beta, maximizing):
         if depth == 0 or board.is_game_over():
-            nn_score = 1000 * evaluate_nn(board, model)
-            eval_score = evaluate(board)
+            nn_score = evaluate_nn(board, model)
+            eval_score = evaluate(board) / 10
             total = nn_score + eval_score
 
             return nn_score, eval_score, total 

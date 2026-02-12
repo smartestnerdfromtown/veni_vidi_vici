@@ -10,7 +10,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print("LOADING PGN and BUILDING DATASET")
 X, y, _, _ = load_positions_with_result(
     pgn_path="games/Modern.pgn", 
-    games=100)
+    games=1000)
 print(f"Dataset size: {len(X)} positions")
 
 

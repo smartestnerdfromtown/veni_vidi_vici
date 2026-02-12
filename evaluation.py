@@ -24,7 +24,7 @@ def evaluate(board: chess.Board):
     score = 0
 
     if board.is_checkmate():
-        return -999 if board.turn else 999
+        return -9 if board.turn else 9
     if board.is_stalemate() or board.is_insufficient_material():
         return 0
     if board.can_claim_threefold_repetition():
