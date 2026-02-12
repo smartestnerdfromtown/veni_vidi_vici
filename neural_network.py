@@ -1,9 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import TensorDataset, DataLoader
 
-class EvalNet(nn.module):
+class EvalNet(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(12, 32, 3, padding=1)

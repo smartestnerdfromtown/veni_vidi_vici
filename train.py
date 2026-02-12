@@ -1,12 +1,7 @@
-import chess
-import chess.pgn
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils.data import TensorDataset, DataLoader
 
-
-PGN_PATH = "big_games.pgn"
 BATCH_SIZE = 64
 EPOCHS = 10
 LR = 0.001

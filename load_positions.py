@@ -61,9 +61,7 @@ def load_positions_with_result(pgn_path: Path, games: int):
             if game_count == games:
                 break
 
-    X = torch.stack(positions)
+    X = torch.stack(positions_tensor)
     y = torch.tensor(labels).unsqueeze(1)
 
     return (X, y, positions, labels)
-
-load_positions_with_result(pgn_path="games/Modern.pgn")
