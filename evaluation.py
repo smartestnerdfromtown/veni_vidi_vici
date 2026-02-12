@@ -58,7 +58,7 @@ def evaluate(board: chess.Board):
 
             # Mobility Bonus
             mobility = len(list(board.legal_moves))
-            mobility_bonus = + 0.02 * mobility
+            mobility_bonus = 0.02 * mobility
 
             # Repetition Penalty
             repetition_penaly = 0
@@ -68,9 +68,9 @@ def evaluate(board: chess.Board):
 
             if piece.color == chess.WHITE:
                 # score += value + pst + mobility_bonus + repetition_penaly
-                score += value + mobility_bonus + repetition_penaly
+                score += pst + mobility_bonus + repetition_penaly
             else:
                 # score -= value + pst + 0.02 * mobility_bonus + abs(repetition_penaly)
-                score += value + mobility_bonus + repetition_penaly
+                score += pst + mobility_bonus + repetition_penaly
                 
     return score

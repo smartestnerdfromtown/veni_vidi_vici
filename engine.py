@@ -21,7 +21,7 @@ class Engine:
 
         for move in board.legal_moves:
             board.push(move)
-            value = self.minimax(
+            nn_score, eval_score, value = self.minimax(
                 depth=self.depth-1, 
                 board=board,
                 alpha=-999999, 
@@ -39,37 +39,61 @@ class Engine:
                     best_value = value
                     best_move = move
 
-        print(value)
+        print(nn_score, eval_score, value)
         return best_move    
 
 
     def minimax(self, depth, board, alpha, beta, maximizing):
         if depth == 0 or board.is_game_over():
-            nn_score = evaluate_nn(board, model)
+            nn_score = 1000 * evaluate_nn(board, model)
             eval_score = evaluate(board)
-            return eval_score + nn_score
+            total = nn_score + eval_score
+
+            return nn_score, eval_score, total 
 
         if maximizing:
-            max_eval = -999999
+            best_total = -999999
+            best_nn = 0
+            best_eval = 0
+
             for move in board.legal_moves:
                 board.push(move)
-                eval = self.minimax(depth-1, board, alpha, beta, False)
+                nn_score, eval_score, total = self.minimax(
+                    depth-1, board, alpha, beta, False
+                )
                 board.pop()
 
-                max_eval = max(max_eval, eval)
-                alpha = max(alpha, eval)
+                if total > best_total:
+                    best_total = total
+                    best_nn = nn_score
+                    best_eval = eval_score
+
+                alpha = max(alpha, total)
                 if beta <= alpha:
                     break
-            return max_eval
+
+            return best_nn, best_eval, best_total
+        
+
         else:
-            min_eval = 999999
+            best_total = 999999
+            best_nn = 0
+            best_eval = 0   
+
             for move in board.legal_moves:
                 board.push(move)
-                eval = self.minimax(depth-1, board, alpha, beta, True)
+                nn_score, eval_score, total = self.minimax(
+                    depth-1, board, alpha, beta, True
+                )
                 board.pop()
 
-                min_eval = min(min_eval, eval)
-                beta = min(beta, eval)
+                if total < best_total:
+                    best_total = total
+                    best_nn = nn_score
+                    best_eval = eval_score
+
+                beta = min(beta, total)
                 if beta <= alpha:
                     break
-            return min_eval
+
+            return best_nn, best_eval, best_total
